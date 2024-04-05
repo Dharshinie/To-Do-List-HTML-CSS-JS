@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>To-Do List</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+    }
+    .container {
+        max-width: 600px;
+        margin: 90px auto;
+        background-color:rgb(210, 249, 91);
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        flex-wrap: wrap;
+    }
+    #todo-list {
+        list-style-type: none;
+        padding: 0;
+    }
+    .todo-item {
+        margin-bottom: 10px;
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .todo-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+    }
+    .delete-btn, .edit-btn, .complete-btn {
+        background-color: #153d16;
+        color: #fff;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 3px;
+        cursor: pointer;
+        margin-right: 5px;
+        height: 40px;
+        width: 120px;
+        border-radius: 5px;
+
+
+    }
+    .delete-btn {
+        background-color: #f44336;
+        height: 40px;
+        width: 120px;
+        border-radius: 5px;
+    }
+    .complete-btn {
+        background-color: #2196F3;
+        height: 40px;
+        width: 120px;
+        border-radius: 5px;
+    }
+    .completed {
+        text-decoration: line-through;
+        opacity: 0.6;
+    }
+    .heading{
+        font-size: 50px;
+        font-family: "caveat";
+        font-weight: bold;
+        color:rgb(33, 249, 9);
+    }
+    .add-button{
+        background-color: #4debae;
+        color: #fff;
+        height: 40px;
+        width: 120px;
+        border-radius: 5px;
+        border-width: 0px;
+        margin: 8px;
+    }
+    .input-box{
+        height: 25px;
+        width: 300px;
+        color: black;
+        font-weight: bold;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1 class="heading">To-Do List</h1>
+    <input type="text" id="todo-input" placeholder="Add new task" class="input-box">
+    <button onclick="addTodo()" class="add-button">Add</button>
+    <ul id="todo-list"></ul>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var todoList = localStorage.getItem("todoList");
+        if (todoList) {
+            document.getElementById("todo-list").innerHTML = todoList;
+        }
+    });
+
+    function addTodo() {
+        var todoInput = document.getElementById("todo-input");
+        var todoList = document.getElementById("todo-list");
+
+        if (todoInput.value.trim() === "") {
+            alert("Please enter a task!");
+            return;
+        }
+
+        var li = document.createElement("li");
+        li.textContent = todoInput.value.trim();
+        li.className = "todo-item";
+
+        var deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "Delete";
+        deleteBtn.className = "delete-btn";
+        deleteBtn.onclick = function() {
+            li.parentNode.removeChild(li);
+            updateLocalStorage();
+        };
+
+        var editBtn = document.createElement("button");
+        editBtn.textContent = "Edit";
+        editBtn.className = "edit-btn";
+        editBtn.onclick = function() {
+            var newText = prompt("Enter new text:", li.textContent);
+            if (newText !== null) {
+                li.textContent = newText.trim();
+                updateLocalStorage();
+            }
+        };
+
+        var completeBtn = document.createElement("button");
+        completeBtn.textContent = "Complete";
+        completeBtn.className = "complete-btn";
+        completeBtn.onclick = function() {
+            li.classList.toggle("completed");
+            updateLocalStorage();
+        };
+
+        li.appendChild(deleteBtn);
+        li.appendChild(editBtn);
+        li.appendChild(completeBtn);
+        todoList.appendChild(li);
+
+        updateLocalStorage();
+        todoInput.value = "";
+    }
+
+    function updateLocalStorage() {
+        var todoList = document.getElementById("todo-list").innerHTML;
+        localStorage.setItem("todoList", todoList);
+    }
+</script>
+
+</body>
+</html>
